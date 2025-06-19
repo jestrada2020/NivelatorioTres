@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas y visualción del nivelatorio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <!-- MathJax para renderizar LaTeX (si lo necesitas para las definiciones) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        body {
+            display: flex;
+            font-family: sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
+        #sidebar {
+            width: 440px; /* Ancho ajustado para mejor visualización de los nombres */
+            background-color: #f8f9fa;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+            border-right: 1px solid #dee2e6;
+        }
+        #sidebar h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #sidebar ul li button {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: #28a745; /* Un color diferente para este conjunto de herramientas */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #sidebar ul li button:hover {
+            background-color: #218838;
+        }
+        #sidebar ul li button.active {
+            background-color: #1e7e34;
+            font-weight: bold;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+        }
+        .tool-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .tool-container h3 {
+            margin-top: 0;
+            color: #28a745;
+        }
+        .ggb-element-container {
+            width: 100%;
+            max-width: 1100px; /* Ajustado al applet más ancho */
+            margin: 15px auto; /* Centrar y espaciar */
+        }
+        .definition {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-left: 5px solid #28a745;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Nivelatorio Tres</h2>
+        <ul>
+            <li><button onclick="app.loadTool('introduccion')">Introducción</button></li>
+            <li><button onclick="app.loadTool('factor-comun')">Factor Común</button></li>
+            <li><button onclick="app.loadTool('productos-notables-igualdades')">Productos Notables en Igualdades</button></li>
+            <li><button onclick="app.loadTool('factorizar-igualdades-notables')">Factorizar con Igualdades Notables</button></li>
+            <li><button onclick="app.loadTool('simplificacion-fracciones-algebraicas')">Simplificación de Fracciones Algebraicas</button></li>
+            <li><button onclick="app.loadTool('ecuaciones-despeje')">Ecuaciones con el Despeje</button></li>
+            <li><button onclick="app.loadTool('ecuaciones-parentesis')">Ecuaciones con Paréntesis</button></li>
+            <li><button onclick="app.loadTool('ecuaciones-fracciones')">Ecuaciones con Fracciones</button></li>
+            <li><button onclick="app.loadTool('ecuaciones-segundo-grado')">Ecuaciones de Segundo Grado</button></li>
+            <li><button onclick="app.loadTool('ecuaciones-especiales-segundo-grado')">Ecuaciones Especiales Segundo Grado</button></li>
+            <li><button onclick="app.loadTool('problemas-ecuacion')">Problemas que se Resuelven con una Ecuación</button></li>
+            <li><button onclick="app.loadTool('sistemas-ecuaciones-fracciones')">Sistemas de Ecuaciones con Fracciones</button></li>
+            <li><button onclick="app.loadTool('sistemas-ecuaciones-3x3')">Sistemas de Ecuaciones 3 por 3</button></li>
+            <li><button onclick="app.loadTool('problemas-sistemas-ecuaciones')">Problemas de Sistemas de Ecuaciones</button></li>
+            
+            
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="tool-content" class="tool-container">
+            <!-- El contenido de la herramienta se cargará aquí -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const toolContents = {
+            'introduccion': {
+                html: `<h3>Introducción a la Caja de Herramientas</h3>
+                    <p>Sabemos que algunos estudiantes llegan con deficiencias a la Universidad, deficiencias que afectan notablemente su rendimiento, así que estos estudiantes deben superar los temas que debieron aprender hace algunos años y aprender nuevamente los conceptos aritmeticos y algebraicos propios de su programa, sin los primeros bien afianzados no se aprenderán los  segundos.</p>
+                    <p>Por eso se ve la necesidad de nivelar a aquellos estudiantes que ingresan con deficiencias, para nivelarlos se ha creado un curso que además de darlo en forma tradicional, pero con un mejor acompañamiento por parte del profesor, se complementan con las actividades en línea que verán a continuación, la idea es brindarles herramientas necesarias para fortalecer sus bases y avanzar con seguridad en el proceso de aprendizaje.</p>
+                    <p>En el desarrollo de las actividades en línea el estudiante no podrá usar calculadora y así podrá desarrollar habilidades de razonamiento lógico, de agilidad mental y comprenderá mejor los conceptos matemáticos.</p>`,
+                scriptContent: null // No necesita script de GeoGebra
+            },
+            'factor-comun': {
+                html: `<h3>Factor Común</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con la factorización por factor común, una técnica fundamental en álgebra para simplificar expresiones y resolver ecuaciones.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-factor-comun"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar la factorización por factor común y practicar la identificación del máximo factor común en expresiones algebraicas. La visualización te ayudará a comprender mejor el proceso de extracción de factores y la simplificación de expresiones polinómicas.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-factor-comun",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "eryksgjr",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-factor-comun');
+                `
+            },
+            'productos-notables-igualdades': {
+                html: `<h3>Productos Notables en Igualdades</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con productos notables y su aplicación en igualdades algebraicas, incluyendo el cuadrado de un binomio, diferencia de cuadrados y otros casos especiales.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-productos-notables-igualdades"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar los productos notables y practicar su identificación y aplicación en igualdades. La visualización te ayudará a comprender mejor las identidades algebraicas fundamentales como (a+b)², (a-b)², (a+b)(a-b) y otros productos especiales que son esenciales en álgebra.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-productos-notables-igualdades",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "zwzzcvma",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-productos-notables-igualdades');
+                `
+            },
+            'factorizar-igualdades-notables': {
+                html: `<h3>Factorizar con Igualdades Notables</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con la factorización utilizando las igualdades notables, aplicando el proceso inverso de los productos notables para descomponer expresiones algebraicas.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-factorizar-igualdades-notables"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar la factorización mediante igualdades notables y practicar la descomposición de expresiones como trinomios cuadrados perfectos, diferencias de cuadrados y otros casos especiales. La visualización te ayudará a comprender mejor cómo reconocer y aplicar las técnicas de factorización basadas en identidades algebraicas.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-factorizar-igualdades-notables",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "wuabdahz",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-factorizar-igualdades-notables');
+                `
+            },
+            'simplificacion-fracciones-algebraicas': {
+                html: `<h3>Simplificación de Fracciones Algebraicas</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con la simplificación de expresiones fraccionarias algebraicas, aplicando técnicas de factorización para reducir fracciones a su forma más simple.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-simplificacion-fracciones-algebraicas"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar la simplificación de fracciones algebraicas y practicar la reducción de expresiones racionales. La visualización te ayudará a comprender mejor cómo factorizar numeradores y denominadores, identificar factores comunes y simplificar expresiones fraccionarias complejas.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-simplificacion-fracciones-algebraicas",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "kdcgeckq",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-simplificacion-fracciones-algebraicas');
+                `
+            },
+            'ecuaciones-despeje': {
+                html: `<h3>Ecuaciones con el Despeje</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con ecuaciones y practicar técnicas de despeje de variables de manera visual e intuitiva.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-ecuaciones-despeje"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar diferentes tipos de ecuaciones y practicar el despeje de variables. La visualización te ayudará a comprender mejor los procesos algebraicos involucrados.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-ecuaciones-despeje",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "wgzbnmjr",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-ecuaciones-despeje');
+                `
+            },
+            'ecuaciones-parentesis': {
+                html: `<h3>Ecuaciones con Paréntesis</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con ecuaciones que contienen paréntesis y practicar técnicas de resolución algebraica paso a paso.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-ecuaciones-parentesis"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar ecuaciones con paréntesis y practicar la aplicación de la propiedad distributiva y otras técnicas algebraicas. La visualización te ayudará a comprender mejor el proceso de simplificación y resolución.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-ecuaciones-parentesis",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "sea7ryaw",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-ecuaciones-parentesis');
+                `
+            },
+            'ecuaciones-fracciones': {
+                html: `<h3>Ecuaciones con Fracciones</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con ecuaciones que contienen fracciones y practicar técnicas de resolución algebraica con denominadores.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-ecuaciones-fracciones"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar ecuaciones con fracciones y practicar la eliminación de denominadores, el mínimo común múltiplo y otras técnicas algebraicas. La visualización te ayudará a comprender mejor el proceso de resolución de ecuaciones fraccionarias.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-ecuaciones-fracciones",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "hdg4jdng",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-ecuaciones-fracciones');
+                `
+            },
+            'ecuaciones-segundo-grado': {
+                html: `<h3>Ecuaciones de Segundo Grado</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con ecuaciones cuadráticas y practicar diferentes métodos de resolución como la fórmula cuadrática, factorización y completar el cuadrado.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-ecuaciones-segundo-grado"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar ecuaciones de segundo grado y practicar los diferentes métodos de resolución. La visualización gráfica te ayudará a comprender mejor el comportamiento de las funciones cuadráticas y la relación entre las raíces y la gráfica de la parábola.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-ecuaciones-segundo-grado",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "nz6bfqzt",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-ecuaciones-segundo-grado');
+                `
+            },
+            'ecuaciones-especiales-segundo-grado': {
+                html: `<h3>Ecuaciones Especiales de Segundo Grado</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con tipos especiales de ecuaciones cuadráticas, incluyendo ecuaciones incompletas, bicuadradas y otros casos particulares que requieren técnicas específicas de resolución.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-ecuaciones-especiales-segundo-grado"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar ecuaciones especiales de segundo grado como las ecuaciones incompletas (ax² + c = 0, ax² + bx = 0), ecuaciones bicuadradas y otros casos particulares. La visualización te ayudará a comprender las particularidades de cada tipo y sus métodos de resolución específicos.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-ecuaciones-especiales-segundo-grado",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "f36xyc6w",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-ecuaciones-especiales-segundo-grado');
+                `
+            },
+            'problemas-ecuacion': {
+                html: `<h3>Problemas que se Resuelven con una Ecuación</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con problemas de aplicación que se resuelven mediante el planteamiento y resolución de ecuaciones, conectando las matemáticas con situaciones de la vida real.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-problemas-ecuacion"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar diferentes tipos de problemas que requieren el planteamiento de ecuaciones para su resolución. Aprenderás a traducir situaciones problema del lenguaje cotidiano al lenguaje algebraico, y viceversa, desarrollando habilidades de modelado matemático.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-problemas-ecuacion",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "f5sgrfej",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-problemas-ecuacion');
+                `
+            },
+            'sistemas-ecuaciones-fracciones': {
+                html: `<h3>Sistemas de Ecuaciones con Fracciones</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con sistemas de ecuaciones lineales que contienen fracciones, practicando técnicas de resolución como sustitución, eliminación y métodos gráficos.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-sistemas-ecuaciones-fracciones"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar sistemas de ecuaciones con fracciones y practicar diferentes métodos de resolución. La visualización gráfica te ayudará a comprender la interpretación geométrica de las soluciones y el manejo algebraico de las fracciones en sistemas de ecuaciones.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-sistemas-ecuaciones-fracciones",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "hecg6bwy",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-sistemas-ecuaciones-fracciones');
+                `
+            },
+            'sistemas-ecuaciones-3x3': {
+                html: `<h3>Sistemas de Ecuaciones 3 por 3</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con sistemas de ecuaciones lineales de tres variables, practicando métodos de resolución como eliminación gaussiana, regla de Cramer y métodos matriciales.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-sistemas-ecuaciones-3x3"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar sistemas de ecuaciones 3x3 y practicar diferentes métodos de resolución. La herramienta te ayudará a comprender los procedimientos paso a paso para resolver sistemas más complejos y visualizar las soluciones en el espacio tridimensional.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-sistemas-ecuaciones-3x3",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "kb6h5342",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-sistemas-ecuaciones-3x3');
+                `
+            },
+            'problemas-sistemas-ecuaciones': {
+                html: `<h3>Problemas de Sistemas de Ecuaciones</h3>
+                    <div class="definition">
+                        <h4>Autor: Javier Cayetano Rodríguez</h4>
+                        <p>Esta herramienta interactiva te permitirá trabajar con problemas de aplicación que se resuelven mediante el planteamiento y resolución de sistemas de ecuaciones, conectando las matemáticas con situaciones reales de múltiples variables.</p>
+                    </div>
+                    <div class="ggb-element-container">
+                        <div id="ggb-problemas-sistemas-ecuaciones"></div>
+                    </div>
+                    <p>Utiliza esta aplicación para explorar diferentes tipos de problemas que requieren el planteamiento de sistemas de ecuaciones para su resolución. Aprenderás a identificar las variables, establecer las relaciones entre ellas y traducir situaciones complejas del lenguaje cotidiano al lenguaje algebraico mediante sistemas de ecuaciones.</p>`,
+                scriptContent: `
+                    var ggbApp = new GGBApplet({
+                        "appName": "classic",
+                        "id": "ggb-problemas-sistemas-ecuaciones",
+                        "showToolBar": true,
+                        "showAlgebraInput": true,
+                        "showMenuBar": true,
+                        "material_id": "j5vaq2ku",
+                        "width": 1000,
+                        "height": 600,
+                        "autoHeight": false,
+                        "scaleContainerClass": "ggb-element-container",
+                        "allowUpscale": true
+                    }, true);
+                    ggbApp.inject('ggb-problemas-sistemas-ecuaciones');
+                `
+            },
+            
+            
+        };
+
+        const app = {
+            activeButton: null,
+            currentGgbScript: null,
+
+            loadTool: function(toolKey) {
+                const contentDiv = document.getElementById('tool-content');
+                const toolData = toolContents[toolKey];
+
+                if (!toolData) {
+                    contentDiv.innerHTML = '<h3>Error</h3><p>Herramienta no encontrada.</p>';
+                    return;
+                }
+
+                contentDiv.innerHTML = toolData.html; // Carga el HTML primero
+
+                // Asegurar que MathJax procese el nuevo contenido si hay fórmulas LaTeX
+                if (typeof MathJax !== "undefined") {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, contentDiv]);
+                }
+
+                if (toolData.scriptContent) {
+                    if (this.currentGgbScript && this.currentGgbScript.parentNode) {
+                        this.currentGgbScript.parentNode.removeChild(this.currentGgbScript);
+                    }
+                    
+                    const scriptEl = document.createElement('script');
+                    scriptEl.type = 'text/javascript';
+                    // Pequeño retraso para asegurar que el DOM esté listo para GeoGebra,
+                    // especialmente si el applet es grande o la máquina es lenta.
+                    scriptEl.textContent = `setTimeout(function() { ${toolData.scriptContent} }, 50);`;
+                    contentDiv.appendChild(scriptEl); 
+                    this.currentGgbScript = scriptEl;
+                } else {
+                     if (this.currentGgbScript && this.currentGgbScript.parentNode) {
+                        this.currentGgbScript.parentNode.removeChild(this.currentGgbScript);
+                        this.currentGgbScript = null;
+                    }
+                }
+
+                if (this.activeButton) {
+                    this.activeButton.classList.remove('active');
+                }
+                const buttons = document.querySelectorAll('#sidebar ul li button');
+                buttons.forEach(button => {
+                    if (button.getAttribute('onclick') === `app.loadTool('${toolKey}')`) {
+                        button.classList.add('active');
+                        this.activeButton = button;
+                    }
+                });
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstButton = document.querySelector('#sidebar ul li button');
+            if (firstButton) {
+                const initialToolKey = firstButton.getAttribute('onclick').match(/app.loadTool\('([^']+)'\)/)[1];
+                app.loadTool(initialToolKey);
+            }
+        });
+    </script>
+    <!-- Si tienes un chatbot, puedes añadir su script aquí también -->
+</body>
+</html>
